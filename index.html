@@ -1,0 +1,2205 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Contact Management System Using Binary Search Tree</title>
+    <!-- Google Font for sleek typography -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            /* Palette: Blue, White, Light-Grey */
+            --primary: #2563eb;
+            --primary-hover: #1d4ed8;
+            --primary-light: #eff6ff;
+            --primary-border: #bfdbfe;
+            --secondary: #0284c7;
+            --accent: #3b82f6;
+            
+            --bg-body: #f8fafc;
+            --bg-card: #ffffff;
+            --bg-subtle: #f1f5f9;
+            --bg-hover: #e2e8f0;
+            
+            --text-dark: #0f172a;
+            --text-muted: #64748b;
+            --text-light: #94a3b8;
+            --text-white: #ffffff;
+            
+            --success: #10b981;
+            --success-light: #ecfdf5;
+            --success-border: #a7f3d0;
+            
+            --danger: #ef4444;
+            --danger-light: #fef2f2;
+            --danger-border: #fecaca;
+            
+            --warning: #f59e0b;
+            --warning-light: #fffbeb;
+            
+            --border-color: #e2e8f0;
+            --border-radius: 12px;
+            --border-radius-sm: 8px;
+            
+            --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+            --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.07), 0 2px 4px -2px rgba(0, 0, 0, 0.05);
+            --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.08), 0 4px 6px -4px rgba(0, 0, 0, 0.04);
+            --transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Plus Jakarta Sans', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-body);
+            color: var(--text-dark);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            line-height: 1.5;
+        }
+
+        /* Top Academic Ribbon */
+        .academic-ribbon {
+            background: linear-gradient(90deg, #1e3a8a, #2563eb, #0284c7);
+            color: var(--text-white);
+            padding: 8px 24px;
+            font-size: 0.85rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 12px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.15);
+        }
+
+        .academic-ribbon .badge-group {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+
+        .academic-ribbon .badge {
+            background: rgba(255, 255, 255, 0.18);
+            backdrop-filter: blur(4px);
+            padding: 3px 10px;
+            border-radius: 20px;
+            font-weight: 600;
+            letter-spacing: 0.3px;
+        }
+
+        .academic-ribbon .student-badge {
+            background: #ffffff;
+            color: #1e3a8a;
+            padding: 3px 12px;
+            border-radius: 20px;
+            font-weight: 700;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        /* Navbar Header */
+        header.navbar {
+            background-color: var(--bg-card);
+            border-bottom: 1px solid var(--border-color);
+            position: sticky;
+            top: 0;
+            z-index: 50;
+            box-shadow: var(--shadow-sm);
+        }
+
+        .navbar-container {
+            max-width: 1440px;
+            margin: 0 auto;
+            padding: 14px 24px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 16px;
+        }
+
+        .brand-wrapper {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+        }
+
+        .brand-icon-box {
+            width: 46px;
+            height: 46px;
+            border-radius: var(--border-radius-sm);
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            box-shadow: 0 4px 10px rgba(37, 99, 235, 0.3);
+            flex-shrink: 0;
+        }
+
+        .brand-title-group h1 {
+            font-size: 1.25rem;
+            font-weight: 800;
+            color: var(--text-dark);
+            letter-spacing: -0.02em;
+            line-height: 1.2;
+        }
+
+        .brand-title-group p {
+            font-size: 0.82rem;
+            color: var(--text-muted);
+            font-weight: 500;
+        }
+
+        .header-actions {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        /* Container Layout */
+        .main-container {
+            max-width: 1440px;
+            width: 100%;
+            margin: 0 auto;
+            padding: 24px;
+            display: flex;
+            flex-direction: column;
+            gap: 24px;
+            flex: 1;
+        }
+
+        /* Stats Cards Section */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+            gap: 18px;
+        }
+
+        .stat-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: var(--border-radius);
+            padding: 20px;
+            display: flex;
+            align-items: center;
+            gap: 18px;
+            box-shadow: var(--shadow-sm);
+            transition: var(--transition);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow);
+            border-color: var(--primary-border);
+        }
+
+        .stat-card::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 4px;
+            height: 100%;
+            background: var(--primary);
+        }
+
+        .stat-card.stat-green::after { background: var(--success); }
+        .stat-card.stat-sky::after { background: var(--secondary); }
+        .stat-card.stat-amber::after { background: var(--warning); }
+
+        .stat-icon {
+            width: 52px;
+            height: 52px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+        }
+
+        .icon-blue { background: var(--primary-light); color: var(--primary); }
+        .icon-green { background: var(--success-light); color: var(--success); }
+        .icon-sky { background: #e0f2fe; color: var(--secondary); }
+        .icon-amber { background: var(--warning-light); color: var(--warning); }
+
+        .stat-info h3 {
+            font-size: 0.8rem;
+            text-transform: uppercase;
+            font-weight: 700;
+            color: var(--text-muted);
+            letter-spacing: 0.5px;
+            margin-bottom: 4px;
+        }
+
+        .stat-info .stat-value {
+            font-size: 1.75rem;
+            font-weight: 800;
+            color: var(--text-dark);
+            line-height: 1;
+        }
+
+        .stat-info .stat-desc {
+            font-size: 0.78rem;
+            color: var(--text-muted);
+            margin-top: 5px;
+        }
+
+        /* Two Column App Grid */
+        .app-grid {
+            display: grid;
+            grid-template-columns: 380px 1fr;
+            gap: 24px;
+            align-items: start;
+        }
+
+        @media (max-width: 1080px) {
+            .app-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* Left & Right Columns */
+        .sidebar-col, .content-col {
+            display: flex;
+            flex-direction: column;
+            gap: 24px;
+        }
+
+        /* Card Component */
+        .card {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: var(--border-radius);
+            box-shadow: var(--shadow-sm);
+            overflow: hidden;
+            transition: var(--transition);
+        }
+
+        .card-header {
+            padding: 16px 20px;
+            border-bottom: 1px solid var(--border-color);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            background-color: #ffffff;
+        }
+
+        .card-header-title {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .card-header-title h2 {
+            font-size: 1.05rem;
+            font-weight: 700;
+            color: var(--text-dark);
+        }
+
+        .card-header-title span.tag {
+            font-size: 0.72rem;
+            padding: 2px 8px;
+            background: var(--primary-light);
+            color: var(--primary);
+            border-radius: 12px;
+            font-weight: 600;
+            border: 1px solid var(--primary-border);
+        }
+
+        .card-body {
+            padding: 20px;
+        }
+
+        /* Form Styles */
+        .form-group {
+            margin-bottom: 16px;
+        }
+
+        .form-group:last-of-type {
+            margin-bottom: 20px;
+        }
+
+        .form-label {
+            display: block;
+            font-size: 0.85rem;
+            font-weight: 600;
+            color: var(--text-dark);
+            margin-bottom: 6px;
+        }
+
+        .form-label span.req {
+            color: var(--danger);
+        }
+
+        .input-group {
+            position: relative;
+            display: flex;
+            align-items: center;
+        }
+
+        .input-icon {
+            position: absolute;
+            left: 12px;
+            color: var(--text-light);
+            pointer-events: none;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 10px 14px 10px 38px;
+            border: 1px solid var(--border-color);
+            border-radius: var(--border-radius-sm);
+            font-size: 0.9rem;
+            color: var(--text-dark);
+            background-color: #ffffff;
+            transition: var(--transition);
+            outline: none;
+        }
+
+        .form-control:focus {
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.15);
+        }
+
+        .form-control::placeholder {
+            color: var(--text-light);
+        }
+
+        .form-help {
+            font-size: 0.75rem;
+            color: var(--text-muted);
+            margin-top: 4px;
+        }
+
+        .form-actions {
+            display: flex;
+            gap: 10px;
+        }
+
+        /* Buttons */
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            padding: 10px 18px;
+            border-radius: var(--border-radius-sm);
+            font-size: 0.88rem;
+            font-weight: 600;
+            cursor: pointer;
+            border: 1px solid transparent;
+            transition: var(--transition);
+            text-decoration: none;
+            user-select: none;
+            white-space: nowrap;
+        }
+
+        .btn-sm {
+            padding: 6px 12px;
+            font-size: 0.8rem;
+            border-radius: 6px;
+        }
+
+        .btn-primary {
+            background-color: var(--primary);
+            color: var(--text-white);
+            box-shadow: 0 2px 4px rgba(37, 99, 235, 0.2);
+        }
+
+        .btn-primary:hover {
+            background-color: var(--primary-hover);
+            transform: translateY(-1px);
+            box-shadow: 0 4px 6px rgba(37, 99, 235, 0.3);
+        }
+
+        .btn-secondary {
+            background-color: var(--bg-subtle);
+            color: var(--text-dark);
+            border-color: var(--border-color);
+        }
+
+        .btn-secondary:hover {
+            background-color: var(--bg-hover);
+            color: var(--text-dark);
+        }
+
+        .btn-outline-primary {
+            background-color: transparent;
+            color: var(--primary);
+            border-color: var(--primary-border);
+        }
+
+        .btn-outline-primary:hover {
+            background-color: var(--primary-light);
+            border-color: var(--primary);
+        }
+
+        .btn-danger-outline {
+            background-color: transparent;
+            color: var(--danger);
+            border-color: var(--danger-border);
+        }
+
+        .btn-danger-outline:hover {
+            background-color: var(--danger-light);
+            border-color: var(--danger);
+        }
+
+        .btn-full {
+            width: 100%;
+        }
+
+        /* Search BST Output Box */
+        .search-result-box {
+            margin-top: 16px;
+            padding: 14px;
+            border-radius: var(--border-radius-sm);
+            background-color: var(--bg-subtle);
+            border: 1px solid var(--border-color);
+            display: none;
+            animation: fadeIn 0.3s ease;
+        }
+
+        .search-result-box.active {
+            display: block;
+        }
+
+        .search-path-trace {
+            margin-top: 10px;
+            padding: 10px;
+            background: #ffffff;
+            border-radius: 6px;
+            border: 1px dashed var(--primary-border);
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.8rem;
+            color: var(--primary);
+            overflow-x: auto;
+        }
+
+        /* Contact Table Styling */
+        .table-responsive {
+            width: 100%;
+            overflow-x: auto;
+        }
+
+        .contact-table {
+            width: 100%;
+            border-collapse: separate;
+            border-spacing: 0;
+            text-align: left;
+        }
+
+        .contact-table th {
+            background-color: var(--bg-subtle);
+            color: var(--text-muted);
+            font-size: 0.78rem;
+            text-transform: uppercase;
+            letter-spacing: 0.6px;
+            font-weight: 700;
+            padding: 12px 16px;
+            border-bottom: 1px solid var(--border-color);
+            white-space: nowrap;
+        }
+
+        .contact-table td {
+            padding: 14px 16px;
+            border-bottom: 1px solid var(--border-color);
+            font-size: 0.88rem;
+            color: var(--text-dark);
+            vertical-align: middle;
+            background: #ffffff;
+            transition: var(--transition);
+        }
+
+        .contact-table tr:hover td {
+            background-color: #f8fafc;
+        }
+
+        .contact-table tr:last-child td {
+            border-bottom: none;
+        }
+
+        .name-cell {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .avatar-initial {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #dbeafe, #bfdbfe);
+            color: var(--primary);
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.95rem;
+            flex-shrink: 0;
+            border: 1px solid #bfdbfe;
+        }
+
+        .contact-name-txt {
+            font-weight: 600;
+            color: var(--text-dark);
+        }
+
+        .badge-bst-key {
+            font-size: 0.68rem;
+            background: #f1f5f9;
+            color: #475569;
+            padding: 2px 6px;
+            border-radius: 4px;
+            margin-left: 6px;
+            font-family: 'JetBrains Mono', monospace;
+        }
+
+        .table-actions {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .action-btn {
+            width: 32px;
+            height: 32px;
+            border-radius: 6px;
+            border: 1px solid var(--border-color);
+            background: #ffffff;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--text-muted);
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .action-btn:hover {
+            color: var(--primary);
+            border-color: var(--primary);
+            background: var(--primary-light);
+        }
+
+        .action-btn.btn-delete:hover {
+            color: var(--danger);
+            border-color: var(--danger);
+            background: var(--danger-light);
+        }
+
+        /* Empty State */
+        .empty-state {
+            text-align: center;
+            padding: 48px 24px;
+        }
+
+        .empty-icon {
+            width: 72px;
+            height: 72px;
+            border-radius: 50%;
+            background: var(--primary-light);
+            color: var(--primary);
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 16px;
+        }
+
+        .empty-state h3 {
+            font-size: 1.15rem;
+            font-weight: 700;
+            color: var(--text-dark);
+            margin-bottom: 6px;
+        }
+
+        .empty-state p {
+            font-size: 0.88rem;
+            color: var(--text-muted);
+            max-width: 380px;
+            margin: 0 auto 20px auto;
+        }
+
+        /* Visual BST Tree Canvas / SVG Container */
+        .tree-visualizer-container {
+            width: 100%;
+            min-height: 280px;
+            max-height: 420px;
+            background: #fafafa;
+            border: 1px solid var(--border-color);
+            border-radius: var(--border-radius-sm);
+            overflow: auto;
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .tree-svg {
+            display: block;
+            margin: auto;
+        }
+
+        .tree-node-circle {
+            fill: #ffffff;
+            stroke: var(--primary);
+            stroke-width: 2.5px;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .tree-node-circle:hover, .tree-node-circle.highlighted {
+            fill: #fef08a;
+            stroke: #ca8a04;
+            transform-origin: center;
+            filter: drop-shadow(0 4px 6px rgba(202, 138, 4, 0.3));
+        }
+
+        .tree-node-text {
+            font-size: 11px;
+            font-weight: 700;
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            fill: #0f172a;
+            text-anchor: middle;
+            pointer-events: none;
+        }
+
+        .tree-edge {
+            stroke: #94a3b8;
+            stroke-width: 2px;
+            stroke-dasharray: 4, 2;
+        }
+
+        /* DS Viva & Algorithm Concept Pill Box */
+        .concept-pill-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 12px;
+            margin-top: 10px;
+        }
+
+        .concept-pill {
+            background: var(--bg-subtle);
+            border: 1px solid var(--border-color);
+            border-radius: var(--border-radius-sm);
+            padding: 10px 14px;
+        }
+
+        .concept-pill .pill-title {
+            font-size: 0.75rem;
+            font-weight: 700;
+            color: var(--text-muted);
+            text-transform: uppercase;
+        }
+
+        .concept-pill .pill-val {
+            font-size: 0.95rem;
+            font-weight: 700;
+            color: var(--primary);
+            font-family: 'JetBrains Mono', monospace;
+            margin-top: 2px;
+        }
+
+        /* Modal Styles */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background: rgba(15, 23, 42, 0.5);
+            backdrop-filter: blur(4px);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 100;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.25s ease;
+            padding: 16px;
+        }
+
+        .modal-overlay.active {
+            opacity: 1;
+            pointer-events: all;
+        }
+
+        .modal-box {
+            background: #ffffff;
+            border-radius: var(--border-radius);
+            width: 100%;
+            max-width: 480px;
+            box-shadow: var(--shadow-lg);
+            overflow: hidden;
+            transform: scale(0.95);
+            transition: transform 0.25s ease;
+        }
+
+        .modal-overlay.active .modal-box {
+            transform: scale(1);
+        }
+
+        .modal-header {
+            padding: 18px 24px;
+            border-bottom: 1px solid var(--border-color);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .modal-header h3 {
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: var(--text-dark);
+        }
+
+        .modal-close-btn {
+            background: none;
+            border: none;
+            color: var(--text-muted);
+            cursor: pointer;
+            padding: 4px;
+            border-radius: 4px;
+            display: flex;
+        }
+
+        .modal-close-btn:hover {
+            color: var(--text-dark);
+            background: var(--bg-hover);
+        }
+
+        .modal-body {
+            padding: 24px;
+        }
+
+        .modal-footer {
+            padding: 14px 24px;
+            border-top: 1px solid var(--border-color);
+            background: var(--bg-subtle);
+            display: flex;
+            justify-content: flex-end;
+            gap: 12px;
+        }
+
+        /* Toast Notifications */
+        .toast-container {
+            position: fixed;
+            bottom: 24px;
+            right: 24px;
+            z-index: 200;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            max-width: 380px;
+            pointer-events: none;
+        }
+
+        .toast {
+            pointer-events: all;
+            background: #ffffff;
+            border-radius: var(--border-radius-sm);
+            padding: 14px 18px;
+            box-shadow: var(--shadow-lg);
+            border-left: 5px solid var(--primary);
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+            animation: slideIn 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+            transition: all 0.3s ease;
+        }
+
+        .toast.toast-success { border-left-color: var(--success); }
+        .toast.toast-danger { border-left-color: var(--danger); }
+        .toast.toast-warning { border-left-color: var(--warning); }
+        .toast.toast-info { border-left-color: var(--primary); }
+
+        .toast-icon {
+            flex-shrink: 0;
+            margin-top: 2px;
+        }
+
+        .toast-content {
+            flex: 1;
+        }
+
+        .toast-title {
+            font-size: 0.88rem;
+            font-weight: 700;
+            color: var(--text-dark);
+            margin-bottom: 2px;
+        }
+
+        .toast-msg {
+            font-size: 0.8rem;
+            color: var(--text-muted);
+        }
+
+        /* Animations */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(6px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes slideIn {
+            from { opacity: 0; transform: translateX(40px); }
+            to { opacity: 1; transform: translateX(0); }
+        }
+
+        /* Footer */
+        footer.app-footer {
+            margin-top: auto;
+            background-color: #ffffff;
+            border-top: 1px solid var(--border-color);
+            padding: 20px 24px;
+            font-size: 0.85rem;
+            color: var(--text-muted);
+        }
+
+        .footer-content {
+            max-width: 1440px;
+            margin: 0 auto;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 14px;
+        }
+
+        .footer-author {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-weight: 600;
+            color: var(--text-dark);
+        }
+
+        /* Print and responsive tweaks */
+        @media (max-width: 768px) {
+            .navbar-container {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+            .header-actions {
+                width: 100%;
+                justify-content: flex-start;
+                flex-wrap: wrap;
+            }
+            .main-container {
+                padding: 16px;
+            }
+            .stats-grid {
+                grid-template-columns: 1fr;
+            }
+            .footer-content {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- 1. Academic Ribbon Header -->
+    <div class="academic-ribbon">
+        <div class="badge-group">
+            <span class="badge">Subject: Data Structures</span>
+            <span class="badge">Code: CS25C08</span>
+            <span class="badge">Degree: B.E. / B.Tech</span>
+        </div>
+        <div class="badge-group">
+            <span class="student-badge">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                    <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+                    <circle cx="12" cy="7" r="4"></circle>
+                </svg>
+                Prepared by: SELVA KUMAR. R
+            </span>
+            <span class="badge">Dept: CSE(AIML)</span>
+        </div>
+    </div>
+
+    <!-- 2. Sticky Navbar -->
+    <header class="navbar">
+        <div class="navbar-container">
+            <div class="brand-wrapper">
+                <div class="brand-icon-box">
+                    <!-- Tree Branch Icon -->
+                    <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <circle cx="12" cy="5" r="3"></circle>
+                        <circle cx="6" cy="18" r="3"></circle>
+                        <circle cx="18" cy="18" r="3"></circle>
+                        <path d="M12 8v4"></path>
+                        <path d="M12 12l-6 3"></path>
+                        <path d="M12 12l6 3"></path>
+                    </svg>
+                </div>
+                <div class="brand-title-group">
+                    <h1>Contact Management System</h1>
+                    <p>Powered by Binary Search Tree (BST) Data Structure</p>
+                </div>
+            </div>
+
+            <div class="header-actions">
+                <button class="btn btn-outline-primary btn-sm" id="btnLoadDemo" title="Populate with sample contacts for testing">
+                    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                        <polyline points="7 10 12 15 17 10"></polyline>
+                        <line x1="12" y1="15" x2="12" y2="3"></line>
+                    </svg>
+                    Load Sample Data
+                </button>
+                <button class="btn btn-danger-outline btn-sm" id="btnClearAll" title="Clear all contacts from BST & Local Storage">
+                    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <polyline points="3 6 5 6 21 6"></polyline>
+                        <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
+                    </svg>
+                    Clear All
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- 3. Main Dashboard Content -->
+    <main class="main-container">
+
+        <!-- Top Statistics Cards -->
+        <section class="stats-grid">
+            <!-- Card 1: Total Contacts -->
+            <div class="stat-card stat-blue">
+                <div class="stat-icon icon-blue">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+                        <circle cx="9" cy="7" r="4"></circle>
+                        <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
+                        <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
+                    </svg>
+                </div>
+                <div class="stat-info">
+                    <h3>Total Contacts</h3>
+                    <div class="stat-value" id="statTotalContacts">0</div>
+                    <div class="stat-desc">Stored in BST Nodes</div>
+                </div>
+            </div>
+
+            <!-- Card 2: Tree Height -->
+            <div class="stat-card stat-green">
+                <div class="stat-icon icon-green">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <polyline points="22 12 18 12 15 21 9 3 6 12 2 12"></polyline>
+                    </svg>
+                </div>
+                <div class="stat-info">
+                    <h3>Tree Height</h3>
+                    <div class="stat-value" id="statTreeHeight">0</div>
+                    <div class="stat-desc">Depth levels of BST</div>
+                </div>
+            </div>
+
+            <!-- Card 3: Traversal Property -->
+            <div class="stat-card stat-sky">
+                <div class="stat-icon icon-sky">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <line x1="4" y1="6" x2="20" y2="6"></line>
+                        <line x1="4" y1="12" x2="14" y2="12"></line>
+                        <line x1="4" y1="18" x2="18" y2="18"></line>
+                    </svg>
+                </div>
+                <div class="stat-info">
+                    <h3>Inorder Traversal</h3>
+                    <div class="stat-value" style="font-size: 1.25rem; font-weight: 700; color: var(--secondary);">L → Root → R</div>
+                    <div class="stat-desc">Guarantees A-Z Order</div>
+                </div>
+            </div>
+
+            <!-- Card 4: Search Complexity -->
+            <div class="stat-card stat-amber">
+                <div class="stat-icon icon-amber">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <circle cx="11" cy="11" r="8"></circle>
+                        <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+                    </svg>
+                </div>
+                <div class="stat-info">
+                    <h3>Search Complexity</h3>
+                    <div class="stat-value" style="font-size: 1.4rem; color: #b45309; font-family: 'JetBrains Mono', monospace;">O(log n)</div>
+                    <div class="stat-desc">Binary Search Efficiency</div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Main Grid Layout -->
+        <div class="app-grid">
+
+            <!-- LEFT COLUMN: Input & Actions -->
+            <aside class="sidebar-col">
+
+                <!-- 1. Add Contact Card -->
+                <div class="card">
+                    <div class="card-header">
+                        <div class="card-header-title">
+                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--primary)" stroke-width="2.2">
+                                <path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+                                <circle cx="8.5" cy="7" r="4"></circle>
+                                <line x1="20" y1="8" x2="20" y2="14"></line>
+                                <line x1="23" y1="11" x2="17" y2="11"></line>
+                            </svg>
+                            <h2>Add New Contact</h2>
+                        </div>
+                        <span class="tag">BST Insert</span>
+                    </div>
+                    <div class="card-body">
+                        <form id="addContactForm" autocomplete="off">
+                            <div class="form-group">
+                                <label class="form-label" for="contactName">Contact Name <span class="req">*</span></label>
+                                <div class="input-group">
+                                    <span class="input-icon">
+                                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
+                                    </span>
+                                    <input type="text" class="form-control" id="contactName" placeholder="e.g. Arun Kumar" required>
+                                </div>
+                                <div class="form-help">Acts as the BST unique search key</div>
+                            </div>
+
+                            <div class="form-group">
+                                <label class="form-label" for="contactPhone">Phone Number <span class="req">*</span></label>
+                                <div class="input-group">
+                                    <span class="input-icon">
+                                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"></path></svg>
+                                    </span>
+                                    <input type="tel" class="form-control" id="contactPhone" placeholder="e.g. 9876543210" required>
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label class="form-label" for="contactEmail">Email Address <span class="req">*</span></label>
+                                <div class="input-group">
+                                    <span class="input-icon">
+                                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path><polyline points="22,6 12,13 2,6"></polyline></svg>
+                                    </span>
+                                    <input type="email" class="form-control" id="contactEmail" placeholder="e.g. arun@example.com" required>
+                                </div>
+                            </div>
+
+                            <div class="form-actions">
+                                <button type="submit" class="btn btn-primary btn-full">
+                                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+                                    Add Contact
+                                </button>
+                                <button type="button" class="btn btn-secondary" id="btnResetAddForm" title="Reset fields">
+                                    Reset
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+
+                <!-- 2. Search Contact Card (BST Search) -->
+                <div class="card">
+                    <div class="card-header">
+                        <div class="card-header-title">
+                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--primary)" stroke-width="2.2">
+                                <circle cx="11" cy="11" r="8"></circle>
+                                <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+                            </svg>
+                            <h2>Search Contact</h2>
+                        </div>
+                        <span class="tag">BST Search</span>
+                    </div>
+                    <div class="card-body">
+                        <form id="searchContactForm" autocomplete="off">
+                            <div class="form-group">
+                                <label class="form-label" for="searchContactName">Enter Contact Name</label>
+                                <div class="input-group">
+                                    <span class="input-icon">
+                                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+                                    </span>
+                                    <input type="text" class="form-control" id="searchContactName" placeholder="Type contact name..." required>
+                                </div>
+                            </div>
+                            <div class="form-actions">
+                                <button type="submit" class="btn btn-primary btn-full">
+                                    Search BST
+                                </button>
+                                <button type="button" class="btn btn-secondary" id="btnClearSearch">
+                                    Clear
+                                </button>
+                            </div>
+                        </form>
+
+                        <!-- Search Result & Path Inspection Box -->
+                        <div class="search-result-box" id="searchResultBox">
+                            <div style="display: flex; justify-content: space-between; align-items: center;">
+                                <strong id="searchResultStatus" style="font-size: 0.9rem;">Search Outcome</strong>
+                                <span id="searchComparisonsBadge" style="font-size: 0.75rem; background: #dbeafe; color: #1e40af; font-weight: 700; padding: 2px 8px; border-radius: 12px;">0 Checks</span>
+                            </div>
+                            <div id="searchResultDetails" style="margin-top: 8px; font-size: 0.85rem; color: var(--text-dark);"></div>
+                            <div style="font-size: 0.75rem; font-weight: 700; margin-top: 10px; color: var(--text-muted); text-transform: uppercase;">BST Traversal Path:</div>
+                            <div class="search-path-trace" id="searchPathTrace">Root → ...</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 3. DSA Academic Viva Reference -->
+                <div class="card">
+                    <div class="card-header">
+                        <div class="card-header-title">
+                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--primary)" stroke-width="2.2">
+                                <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path>
+                                <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path>
+                            </svg>
+                            <h2>BST Properties & Complexity</h2>
+                        </div>
+                    </div>
+                    <div class="card-body" style="font-size: 0.82rem; color: var(--text-muted);">
+                        <p style="margin-bottom: 10px;">
+                            For each node with key <strong>K</strong>, all keys in the left subtree are <strong>&lt; K</strong> and all keys in the right subtree are <strong>&gt; K</strong>.
+                        </p>
+                        <div class="concept-pill-grid">
+                            <div class="concept-pill">
+                                <div class="pill-title">Search (Avg)</div>
+                                <div class="pill-val">O(log n)</div>
+                            </div>
+                            <div class="concept-pill">
+                                <div class="pill-title">Insert (Avg)</div>
+                                <div class="pill-val">O(log n)</div>
+                            </div>
+                            <div class="concept-pill">
+                                <div class="pill-title">Delete (Avg)</div>
+                                <div class="pill-val">O(log n)</div>
+                            </div>
+                            <div class="concept-pill">
+                                <div class="pill-title">Inorder Traversal</div>
+                                <div class="pill-val">O(n)</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </aside>
+
+
+            <!-- RIGHT COLUMN: Visual Tree & Contact Directory Table -->
+            <section class="content-col">
+
+                <!-- 1. Live Interactive BST Visualizer -->
+                <div class="card">
+                    <div class="card-header">
+                        <div class="card-header-title">
+                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--primary)" stroke-width="2.2">
+                                <circle cx="12" cy="5" r="3"></circle>
+                                <circle cx="6" cy="18" r="3"></circle>
+                                <circle cx="18" cy="18" r="3"></circle>
+                                <path d="M12 8v4"></path>
+                                <path d="M12 12l-6 3"></path>
+                                <path d="M12 12l6 3"></path>
+                            </svg>
+                            <h2>Live BST Structure Visualizer</h2>
+                        </div>
+                        <span class="tag">Dynamic SVG</span>
+                    </div>
+                    <div class="card-body">
+                        <p style="font-size: 0.82rem; color: var(--text-muted); margin-bottom: 12px;">
+                            Interactive binary search tree topology. Yellow node represents currently searched or selected contact.
+                        </p>
+                        <div class="tree-visualizer-container" id="treeContainer">
+                            <!-- SVG is rendered dynamically by renderTree() -->
+                            <svg id="treeSvg" class="tree-svg"></svg>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 2. Contact Directory (Inorder Alphabetical Order) -->
+                <div class="card">
+                    <div class="card-header">
+                        <div class="card-header-title">
+                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--primary)" stroke-width="2.2">
+                                <path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"></path>
+                                <rect x="8" y="2" width="8" height="4" rx="1" ry="1"></rect>
+                            </svg>
+                            <h2>Contact Directory</h2>
+                            <span class="tag" id="tableCountBadge">0 Contacts</span>
+                        </div>
+                        <div style="font-size: 0.75rem; color: var(--text-muted); font-weight: 600;">
+                            Inorder Traversal (A-Z)
+                        </div>
+                    </div>
+
+                    <div class="card-body" style="padding: 0;">
+                        <div class="table-responsive">
+                            <table class="contact-table" id="contactTable">
+                                <thead>
+                                    <tr>
+                                        <th style="width: 50px;">#</th>
+                                        <th>Contact Name (BST Key)</th>
+                                        <th>Phone Number</th>
+                                        <th>Email Address</th>
+                                        <th style="text-align: right; width: 110px;">Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="contactTableBody">
+                                    <!-- Rendered dynamically -->
+                                </tbody>
+                            </table>
+                        </div>
+
+                        <!-- Empty State when 0 contacts exist -->
+                        <div class="empty-state" id="emptyState" style="display: none;">
+                            <div class="empty-icon">
+                                <svg width="34" height="34" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+                                    <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+                                    <circle cx="9" cy="7" r="4"></circle>
+                                    <line x1="17" y1="8" x2="23" y2="8"></line>
+                                </svg>
+                            </div>
+                            <h3>No Contacts Stored in Tree</h3>
+                            <p>The Binary Search Tree is currently empty. Use the form on the left or load sample data to get started.</p>
+                            <button class="btn btn-primary btn-sm" id="btnEmptyLoadSample">
+                                Load Sample Contacts
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+            </section>
+        </div>
+
+    </main>
+
+    <!-- 4. Footer -->
+    <footer class="app-footer">
+        <div class="footer-content">
+            <div>
+                <strong>Project:</strong> Contact Management System Using Binary Search Tree (CS25C08)
+            </div>
+            <div class="footer-author">
+                <span>Designed & Developed by:</span>
+                <span style="color: var(--primary);">SELVA KUMAR. R</span>
+                <span>• Dept of CSE(AIML)</span>
+            </div>
+        </div>
+    </footer>
+
+    <!-- 5. Edit Contact Modal -->
+    <div class="modal-overlay" id="editModalOverlay">
+        <div class="modal-box">
+            <div class="modal-header">
+                <h3>Update Contact Details</h3>
+                <button class="modal-close-btn" id="btnModalClose" aria-label="Close modal">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <line x1="18" y1="6" x2="6" y2="18"></line>
+                        <line x1="6" y1="6" x2="18" y2="18"></line>
+                    </svg>
+                </button>
+            </div>
+            <form id="editContactForm">
+                <div class="modal-body">
+                    <!-- Hidden original name to detect key change in BST -->
+                    <input type="hidden" id="editOriginalName">
+
+                    <div class="form-group">
+                        <label class="form-label" for="editContactName">Contact Name (BST Key) <span class="req">*</span></label>
+                        <div class="input-group">
+                            <span class="input-icon">
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
+                            </span>
+                            <input type="text" class="form-control" id="editContactName" required>
+                        </div>
+                        <div class="form-help">Modifying name updates the BST structure</div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label" for="editContactPhone">Phone Number <span class="req">*</span></label>
+                        <div class="input-group">
+                            <span class="input-icon">
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"></path></svg>
+                            </span>
+                            <input type="tel" class="form-control" id="editContactPhone" required>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label" for="editContactEmail">Email Address <span class="req">*</span></label>
+                        <div class="input-group">
+                            <span class="input-icon">
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path><polyline points="22,6 12,13 2,6"></polyline></svg>
+                            </span>
+                            <input type="email" class="form-control" id="editContactEmail" required>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" id="btnModalCancel">Cancel</button>
+                    <button type="submit" class="btn btn-primary">Save Changes</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- 6. Toast Container -->
+    <div class="toast-container" id="toastContainer"></div>
+
+
+    <!-- ========================================== -->
+    <!-- JAVASCRIPT: DATA STRUCTURES & APPLICATION -->
+    <!-- ========================================== -->
+    <script>
+        /**
+         * ========================================================
+         * MINI PROJECT: CONTACT MANAGEMENT SYSTEM USING BINARY SEARCH TREE
+         * Subject: Data Structures (CS25C08)
+         * Prepared By: SELVA KUMAR. R | CSE(AIML)
+         * ========================================================
+         */
+
+        /**
+         * 1. BINARY SEARCH TREE NODE CLASS
+         * Each node stores contact attributes and references to left & right children
+         */
+        class BSTNode {
+            constructor(name, phone, email) {
+                this.name = name.trim();
+                this.phone = phone.trim();
+                this.email = email.trim();
+                this.left = null;   // Left child (alphabetically smaller)
+                this.right = null;  // Right child (alphabetically greater)
+            }
+        }
+
+        /**
+         * 2. BINARY SEARCH TREE (BST) CLASS
+         * Implements Insertion, Searching, Deletion, Inorder Traversal,
+         * Preorder Serialization for LocalStorage, and Height Calculation.
+         */
+        class BinarySearchTree {
+            constructor() {
+                this.root = null;
+            }
+
+            // Normalizes string comparison (case-insensitive for uniform alphabetical sorting)
+            compare(name1, name2) {
+                return name1.toLowerCase().localeCompare(name2.toLowerCase());
+            }
+
+            /**
+             * INSERTION OPERATION
+             * Inserts a new contact into the BST. Prevents duplicate contact names.
+             * Returns { success: boolean, message: string }
+             */
+            insert(name, phone, email) {
+                const newNode = new BSTNode(name, phone, email);
+
+                if (this.root === null) {
+                    this.root = newNode;
+                    return { success: true, message: `Contact "${name}" added as the BST root node.` };
+                }
+
+                let current = this.root;
+                while (true) {
+                    const comparison = this.compare(name, current.name);
+
+                    if (comparison === 0) {
+                        return { success: false, message: `A contact with the name "${name}" already exists in the BST.` };
+                    } else if (comparison < 0) {
+                        // Go to the left subtree
+                        if (current.left === null) {
+                            current.left = newNode;
+                            return { success: true, message: `Contact "${name}" inserted successfully.` };
+                        }
+                        current = current.left;
+                    } else {
+                        // Go to the right subtree
+                        if (current.right === null) {
+                            current.right = newNode;
+                            return { success: true, message: `Contact "${name}" inserted successfully.` };
+                        }
+                        current = current.right;
+                    }
+                }
+            }
+
+            /**
+             * SEARCH OPERATION
+             * Searches for a contact by name and logs each step in the path.
+             * Returns { found: boolean, node: BSTNode | null, path: Array, comparisons: number }
+             */
+            search(name) {
+                let current = this.root;
+                const path = [];
+                let comparisons = 0;
+
+                while (current !== null) {
+                    comparisons++;
+                    const comparison = this.compare(name, current.name);
+
+                    if (comparison === 0) {
+                        path.push({ nodeName: current.name, action: 'MATCH FOUND' });
+                        return {
+                            found: true,
+                            node: current,
+                            path: path,
+                            comparisons: comparisons
+                        };
+                    } else if (comparison < 0) {
+                        path.push({ nodeName: current.name, action: `"${name}" < "${current.name}" → Branch LEFT` });
+                        current = current.left;
+                    } else {
+                        path.push({ nodeName: current.name, action: `"${name}" > "${current.name}" → Branch RIGHT` });
+                        current = current.right;
+                    }
+                }
+
+                return {
+                    found: false,
+                    node: null,
+                    path: path,
+                    comparisons: comparisons
+                };
+            }
+
+            /**
+             * DELETION OPERATION
+             * Handles all 3 BST deletion cases:
+             * Case 1: Node has no children (Leaf node)
+             * Case 2: Node has one child
+             * Case 3: Node has two children (Replaces with Inorder Successor)
+             */
+            delete(name) {
+                let deleted = false;
+
+                const deleteRecursively = (node, key) => {
+                    if (node === null) {
+                        return null;
+                    }
+
+                    const comparison = this.compare(key, node.name);
+
+                    if (comparison < 0) {
+                        node.left = deleteRecursively(node.left, key);
+                        return node;
+                    } else if (comparison > 0) {
+                        node.right = deleteRecursively(node.right, key);
+                        return node;
+                    } else {
+                        // Node to delete found!
+                        deleted = true;
+
+                        // Case 1: Leaf node (no child)
+                        if (node.left === null && node.right === null) {
+                            return null;
+                        }
+
+                        // Case 2: One child
+                        if (node.left === null) {
+                            return node.right;
+                        }
+                        if (node.right === null) {
+                            return node.left;
+                        }
+
+                        // Case 3: Two children
+                        // Find inorder successor (minimum node in right subtree)
+                        let successor = this.findMinNode(node.right);
+                        node.name = successor.name;
+                        node.phone = successor.phone;
+                        node.email = successor.email;
+
+                        // Delete the inorder successor from the right subtree
+                        node.right = deleteRecursively(node.right, successor.name);
+                        return node;
+                    }
+                };
+
+                this.root = deleteRecursively(this.root, name);
+                return deleted;
+            }
+
+            // Helper to find the node with the minimum key in a subtree
+            findMinNode(node) {
+                let current = node;
+                while (current.left !== null) {
+                    current = current.left;
+                }
+                return current;
+            }
+
+            /**
+             * INORDER TRAVERSAL (Left -> Root -> Right)
+             * Retrieves all contacts in sorted alphabetical order
+             */
+            inorderTraversal(node = this.root, result = []) {
+                if (node !== null) {
+                    this.inorderTraversal(node.left, result);
+                    result.push({
+                        name: node.name,
+                        phone: node.phone,
+                        email: node.email
+                    });
+                    this.inorderTraversal(node.right, result);
+                }
+                return result;
+            }
+
+            /**
+             * PREORDER TRAVERSAL (Root -> Left -> Right)
+             * Used for serializing the tree so that upon reloading from Local Storage,
+             * the exact tree structure and balance are recreated.
+             */
+            preorderTraversal(node = this.root, result = []) {
+                if (node !== null) {
+                    result.push({
+                        name: node.name,
+                        phone: node.phone,
+                        email: node.email
+                    });
+                    this.preorderTraversal(node.left, result);
+                    this.preorderTraversal(node.right, result);
+                }
+                return result;
+            }
+
+            /**
+             * TOTAL CONTACTS COUNT
+             */
+            countNodes(node = this.root) {
+                if (node === null) return 0;
+                return 1 + this.countNodes(node.left) + this.countNodes(node.right);
+            }
+
+            /**
+             * TREE HEIGHT (Max depth of tree)
+             */
+            getHeight(node = this.root) {
+                if (node === null) return 0;
+                const leftHeight = this.getHeight(node.left);
+                const rightHeight = this.getHeight(node.right);
+                return 1 + Math.max(leftHeight, rightHeight);
+            }
+
+            /**
+             * CLEAR TREE
+             */
+            clear() {
+                this.root = null;
+            }
+
+            /**
+             * UPDATE OPERATION
+             * Updates phone/email or handles re-inserting if name (BST key) changes
+             */
+            update(oldName, newName, newPhone, newEmail) {
+                if (this.compare(oldName, newName) === 0) {
+                    // Name is the same, simply search and update phone & email
+                    const searchRes = this.search(oldName);
+                    if (searchRes.found) {
+                        searchRes.node.phone = newPhone.trim();
+                        searchRes.node.email = newEmail.trim();
+                        return { success: true, message: `Contact "${oldName}" updated successfully.` };
+                    }
+                    return { success: false, message: `Contact "${oldName}" not found.` };
+                } else {
+                    // Name has changed. Check if new name already exists!
+                    const checkExists = this.search(newName);
+                    if (checkExists.found) {
+                        return { success: false, message: `Cannot rename to "${newName}". That contact already exists.` };
+                    }
+                    // Delete old node and insert new node
+                    this.delete(oldName);
+                    this.insert(newName, newPhone, newEmail);
+                    return { success: true, message: `Contact updated and repositioned in BST.` };
+                }
+            }
+        }
+
+
+        /**
+         * ========================================================
+         * 3. APPLICATION STATE & USER INTERFACE LOGIC
+         * ========================================================
+         */
+        const bst = new BinarySearchTree();
+        const STORAGE_KEY = 'CMS_BST_CONTACTS_DATA_CS25C08';
+        let highlightedNodeName = null;
+
+        // Sample initial contacts for quick college demonstration
+        const sampleContacts = [
+            { name: "Kavitha S", phone: "9876501234", email: "kavitha.s@gmail.com" },
+            { name: "Deepak R", phone: "9443123456", email: "deepak.r@yahoo.com" },
+            { name: "Suresh Kumar", phone: "9840198765", email: "suresh.kumar@outlook.com" },
+            { name: "Anand M", phone: "9176543210", email: "anand.m@gmail.com" },
+            { name: "Ganesh P", phone: "9884123890", email: "ganesh.p@gmail.com" },
+            { name: "Pooja V", phone: "9790123456", email: "pooja.v@gmail.com" },
+            { name: "Vignesh T", phone: "9444156789", email: "vignesh.t@gmail.com" }
+        ];
+
+        // DOM Element Selectors
+        const addContactForm = document.getElementById('addContactForm');
+        const contactNameInput = document.getElementById('contactName');
+        const contactPhoneInput = document.getElementById('contactPhone');
+        const contactEmailInput = document.getElementById('contactEmail');
+        const btnResetAddForm = document.getElementById('btnResetAddForm');
+
+        const searchContactForm = document.getElementById('searchContactForm');
+        const searchContactNameInput = document.getElementById('searchContactName');
+        const btnClearSearch = document.getElementById('btnClearSearch');
+        const searchResultBox = document.getElementById('searchResultBox');
+        const searchResultStatus = document.getElementById('searchResultStatus');
+        const searchComparisonsBadge = document.getElementById('searchComparisonsBadge');
+        const searchResultDetails = document.getElementById('searchResultDetails');
+        const searchPathTrace = document.getElementById('searchPathTrace');
+
+        const contactTableBody = document.getElementById('contactTableBody');
+        const emptyState = document.getElementById('emptyState');
+        const tableCountBadge = document.getElementById('tableCountBadge');
+
+        const statTotalContacts = document.getElementById('statTotalContacts');
+        const statTreeHeight = document.getElementById('statTreeHeight');
+
+        const btnLoadDemo = document.getElementById('btnLoadDemo');
+        const btnEmptyLoadSample = document.getElementById('btnEmptyLoadSample');
+        const btnClearAll = document.getElementById('btnClearAll');
+
+        // Modal Elements
+        const editModalOverlay = document.getElementById('editModalOverlay');
+        const editContactForm = document.getElementById('editContactForm');
+        const editOriginalName = document.getElementById('editOriginalName');
+        const editContactName = document.getElementById('editContactName');
+        const editContactPhone = document.getElementById('editContactPhone');
+        const editContactEmail = document.getElementById('editContactEmail');
+        const btnModalClose = document.getElementById('btnModalClose');
+        const btnModalCancel = document.getElementById('btnModalCancel');
+
+        const treeSvg = document.getElementById('treeSvg');
+        const toastContainer = document.getElementById('toastContainer');
+
+        /**
+         * 4. LOCAL STORAGE SYNC
+         */
+        function saveToLocalStorage() {
+            // Preorder traversal saves root first, preserving tree layout on restore
+            const contactsList = bst.preorderTraversal();
+            localStorage.setItem(STORAGE_KEY, JSON.stringify(contactsList));
+        }
+
+        function loadFromLocalStorage() {
+            const rawData = localStorage.getItem(STORAGE_KEY);
+            if (rawData) {
+                try {
+                    const contactsList = JSON.parse(rawData);
+                    bst.clear();
+                    if (Array.isArray(contactsList)) {
+                        contactsList.forEach(c => {
+                            if (c.name && c.phone && c.email) {
+                                bst.insert(c.name, c.phone, c.email);
+                            }
+                        });
+                    }
+                } catch (e) {
+                    console.error("Failed to load contacts from LocalStorage:", e);
+                }
+            } else {
+                // If first time visiting, populate sample contacts
+                loadSampleData(false);
+            }
+        }
+
+        /**
+         * 5. TOAST NOTIFICATION UTILITY
+         */
+        function showToast(title, message, type = 'info') {
+            const toast = document.createElement('div');
+            toast.className = `toast toast-${type}`;
+
+            let iconSvg = '';
+            if (type === 'success') {
+                iconSvg = `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--success)" stroke-width="2.5"><polyline points="20 6 9 17 4 12"></polyline></svg>`;
+            } else if (type === 'danger') {
+                iconSvg = `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--danger)" stroke-width="2.5"><circle cx="12" cy="12" r="10"></circle><line x1="15" y1="9" x2="9" y2="15"></line><line x1="9" y1="9" x2="15" y2="15"></line></svg>`;
+            } else if (type === 'warning') {
+                iconSvg = `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--warning)" stroke-width="2.5"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"></path><line x1="12" y1="9" x2="12" y2="13"></line><line x1="12" y1="17" x2="12.01" y2="17"></line></svg>`;
+            } else {
+                iconSvg = `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--primary)" stroke-width="2.5"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="16" x2="12" y2="12"></line><line x1="12" y1="8" x2="12.01" y2="8"></line></svg>`;
+            }
+
+            toast.innerHTML = `
+                <div class="toast-icon">${iconSvg}</div>
+                <div class="toast-content">
+                    <div class="toast-title">${title}</div>
+                    <div class="toast-msg">${message}</div>
+                </div>
+            `;
+
+            toastContainer.appendChild(toast);
+
+            setTimeout(() => {
+                toast.style.opacity = '0';
+                toast.style.transform = 'translateY(10px)';
+                setTimeout(() => toast.remove(), 300);
+            }, 3500);
+        }
+
+        /**
+         * 6. VALIDATION HELPERS
+         */
+        function validateInput(name, phone, email) {
+            if (!name || name.trim().length === 0) {
+                showToast("Validation Error", "Contact name cannot be empty.", "warning");
+                return false;
+            }
+
+            // Simple phone validation: digits, hyphens, spaces, min 7 digits
+            const cleanPhone = phone.replace(/[\s\-\(\)\+]/g, '');
+            if (!cleanPhone || cleanPhone.length < 7 || !/^\d+$/.test(cleanPhone)) {
+                showToast("Validation Error", "Please enter a valid phone number (at least 7 digits).", "warning");
+                return false;
+            }
+
+            // Simple email validation regex
+            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            if (!emailRegex.test(email.trim())) {
+                showToast("Validation Error", "Please enter a valid email address.", "warning");
+                return false;
+            }
+
+            return true;
+        }
+
+        /**
+         * 7. UI REFRESH & INORDER TABLE RENDERING
+         */
+        function refreshUI() {
+            // Retrieve contacts in alphabetical order using Inorder Traversal
+            const contacts = bst.inorderTraversal();
+            const total = contacts.length;
+            const height = bst.getHeight();
+
+            // Update stats
+            statTotalContacts.textContent = total;
+            statTreeHeight.textContent = height;
+            tableCountBadge.textContent = `${total} Contact${total === 1 ? '' : 's'}`;
+
+            // Render Table
+            contactTableBody.innerHTML = '';
+            if (total === 0) {
+                emptyState.style.display = 'block';
+                document.getElementById('contactTable').style.display = 'none';
+            } else {
+                emptyState.style.display = 'none';
+                document.getElementById('contactTable').style.display = 'table';
+
+                contacts.forEach((contact, index) => {
+                    const tr = document.createElement('tr');
+                    const initial = contact.name.charAt(0).toUpperCase();
+
+                    tr.innerHTML = `
+                        <td style="color: var(--text-muted); font-weight: 600;">${index + 1}</td>
+                        <td>
+                            <div class="name-cell">
+                                <div class="avatar-initial">${initial}</div>
+                                <div>
+                                    <span class="contact-name-txt">${escapeHTML(contact.name)}</span>
+                                    <span class="badge-bst-key">BST Key</span>
+                                </div>
+                            </div>
+                        </td>
+                        <td>
+                            <span style="font-family: 'JetBrains Mono', monospace; font-size: 0.85rem;">
+                                ${escapeHTML(contact.phone)}
+                            </span>
+                        </td>
+                        <td>
+                            <a href="mailto:${escapeHTML(contact.email)}" style="color: var(--primary); text-decoration: none;">
+                                ${escapeHTML(contact.email)}
+                            </a>
+                        </td>
+                        <td style="text-align: right;">
+                            <div class="table-actions" style="justify-content: flex-end;">
+                                <button class="action-btn" title="Highlight in Tree" onclick="handleHighlightNode('${escapeJsString(contact.name)}')">
+                                    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+                                </button>
+                                <button class="action-btn" title="Edit Contact" onclick="openEditModal('${escapeJsString(contact.name)}')">
+                                    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path></svg>
+                                </button>
+                                <button class="action-btn btn-delete" title="Delete from BST" onclick="handleDeleteContact('${escapeJsString(contact.name)}')">
+                                    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path></svg>
+                                </button>
+                            </div>
+                        </td>
+                    `;
+                    contactTableBody.appendChild(tr);
+                });
+            }
+
+            // Render live SVG Tree
+            renderTreeVisualizer();
+        }
+
+        /**
+         * 8. LIVE BST SVG TREE VISUALIZER
+         * Calculates positions and draws tree branches & nodes
+         */
+        function renderTreeVisualizer() {
+            treeSvg.innerHTML = '';
+
+            if (bst.root === null) {
+                treeSvg.setAttribute('width', '240');
+                treeSvg.setAttribute('height', '80');
+                treeSvg.innerHTML = `
+                    <text x="120" y="45" text-anchor="middle" fill="#94a3b8" font-size="13" font-family="'Plus Jakarta Sans', sans-serif">
+                        (Tree is empty - Add a contact to view BST)
+                    </text>
+                `;
+                return;
+            }
+
+            // Assign in-order X positions to give an authentic BST layout
+            let currentXOrder = 0;
+            const nodeWidth = 75;
+            const levelHeight = 65;
+
+            function assignPositions(node, depth = 0) {
+                if (node === null) return;
+                assignPositions(node.left, depth + 1);
+                node.xOrder = currentXOrder++;
+                node.depth = depth;
+                assignPositions(node.right, depth + 1);
+            }
+
+            assignPositions(bst.root, 0);
+
+            const totalNodes = currentXOrder;
+            const svgWidth = Math.max(totalNodes * nodeWidth + 60, 480);
+            const maxDepth = bst.getHeight() - 1;
+            const svgHeight = Math.max((maxDepth + 1) * levelHeight + 70, 220);
+
+            treeSvg.setAttribute('width', svgWidth);
+            treeSvg.setAttribute('height', svgHeight);
+
+            // Compute actual coordinates
+            function calculateCoordinates(node) {
+                if (node === null) return;
+                node.cx = 40 + node.xOrder * ((svgWidth - 80) / Math.max(totalNodes - 1, 1));
+                node.cy = 40 + node.depth * levelHeight;
+                calculateCoordinates(node.left);
+                calculateCoordinates(node.right);
+            }
+
+            calculateCoordinates(bst.root);
+
+            // Draw Edges First (Lines connecting parents to children)
+            function drawEdges(node) {
+                if (node === null) return;
+
+                if (node.left) {
+                    const line = document.createElementNS('http://www.w3.org/2000/svg', 'line');
+                    line.setAttribute('x1', node.cx);
+                    line.setAttribute('y1', node.cy);
+                    line.setAttribute('x2', node.left.cx);
+                    line.setAttribute('y2', node.left.cy);
+                    line.setAttribute('class', 'tree-edge');
+                    treeSvg.appendChild(line);
+                    drawEdges(node.left);
+                }
+
+                if (node.right) {
+                    const line = document.createElementNS('http://www.w3.org/2000/svg', 'line');
+                    line.setAttribute('x1', node.cx);
+                    line.setAttribute('y1', node.cy);
+                    line.setAttribute('x2', node.right.cx);
+                    line.setAttribute('y2', node.right.cy);
+                    line.setAttribute('class', 'tree-edge');
+                    treeSvg.appendChild(line);
+                    drawEdges(node.right);
+                }
+            }
+
+            drawEdges(bst.root);
+
+            // Draw Nodes (Circles and Text Labels)
+            function drawNodes(node) {
+                if (node === null) return;
+
+                const g = document.createElementNS('http://www.w3.org/2000/svg', 'g');
+                g.setAttribute('style', 'cursor: pointer;');
+                g.onclick = () => {
+                    handleHighlightNode(node.name);
+                    showToast("BST Node Info", `Key: "${node.name}" | Phone: ${node.phone}`, "info");
+                };
+
+                const isHighlighted = highlightedNodeName && 
+                    bst.compare(highlightedNodeName, node.name) === 0;
+
+                const circle = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
+                circle.setAttribute('cx', node.cx);
+                circle.setAttribute('cy', node.cy);
+                circle.setAttribute('r', '20');
+                circle.setAttribute('class', `tree-node-circle ${isHighlighted ? 'highlighted' : ''}`);
+
+                // Shorten name if too long for circle
+                let displayName = node.name;
+                if (displayName.length > 7) {
+                    displayName = displayName.substring(0, 6) + '..';
+                }
+
+                const text = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+                text.setAttribute('x', node.cx);
+                text.setAttribute('y', node.cy + 4);
+                text.setAttribute('class', 'tree-node-text');
+                text.textContent = displayName;
+
+                // Tooltip title
+                const title = document.createElementNS('http://www.w3.org/2000/svg', 'title');
+                title.textContent = `Name: ${node.name}\nPhone: ${node.phone}\nEmail: ${node.email}`;
+                g.appendChild(title);
+
+                g.appendChild(circle);
+                g.appendChild(text);
+                treeSvg.appendChild(g);
+
+                drawNodes(node.left);
+                drawNodes(node.right);
+            }
+
+            drawNodes(bst.root);
+        }
+
+        /**
+         * 9. EVENT HANDLERS & ACTIONS
+         */
+
+        // ADD CONTACT
+        addContactForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+            const name = contactNameInput.value.trim();
+            const phone = contactPhoneInput.value.trim();
+            const email = contactEmailInput.value.trim();
+
+            if (!validateInput(name, phone, email)) return;
+
+            const result = bst.insert(name, phone, email);
+
+            if (result.success) {
+                saveToLocalStorage();
+                refreshUI();
+                showToast("Success", result.message, "success");
+                addContactForm.reset();
+                highlightedNodeName = name;
+                renderTreeVisualizer();
+            } else {
+                showToast("Duplicate Error", result.message, "danger");
+            }
+        });
+
+        btnResetAddForm.addEventListener('click', () => {
+            addContactForm.reset();
+        });
+
+        // SEARCH CONTACT (BST Search)
+        searchContactForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+            const query = searchContactNameInput.value.trim();
+
+            if (!query) {
+                showToast("Search Notice", "Please enter a name to search in the BST.", "warning");
+                return;
+            }
+
+            const searchRes = bst.search(query);
+            searchResultBox.classList.add('active');
+
+            if (searchRes.found) {
+                searchResultStatus.innerHTML = `<span style="color: var(--success); font-weight: 700;">✓ Contact Found</span>`;
+                searchComparisonsBadge.textContent = `${searchRes.comparisons} Comparison${searchRes.comparisons === 1 ? '' : 's'}`;
+                
+                searchResultDetails.innerHTML = `
+                    <div style="background: #ffffff; padding: 10px; border-radius: 6px; border: 1px solid var(--border-color); margin-top: 6px;">
+                        <div><strong>Name:</strong> ${escapeHTML(searchRes.node.name)}</div>
+                        <div><strong>Phone:</strong> ${escapeHTML(searchRes.node.phone)}</div>
+                        <div><strong>Email:</strong> ${escapeHTML(searchRes.node.email)}</div>
+                    </div>
+                `;
+
+                // Render path
+                const pathString = searchRes.path.map(step => {
+                    return `[${step.nodeName}] → ${step.action}`;
+                }).join('<br>↳ ');
+                searchPathTrace.innerHTML = `Start at Root:<br>↳ ${pathString}`;
+
+                highlightedNodeName = searchRes.node.name;
+                renderTreeVisualizer();
+                showToast("Contact Located", `Found "${searchRes.node.name}" in ${searchRes.comparisons} BST comparison(s).`, "success");
+            } else {
+                searchResultStatus.innerHTML = `<span style="color: var(--danger); font-weight: 700;">✗ Not Found</span>`;
+                searchComparisonsBadge.textContent = `${searchRes.comparisons} Comparison${searchRes.comparisons === 1 ? '' : 's'}`;
+                searchResultDetails.innerHTML = `<p style="color: var(--text-muted); margin-top: 4px;">No contact matching "${escapeHTML(query)}" exists in the BST.</p>`;
+
+                const pathString = searchRes.path.length > 0 
+                    ? searchRes.path.map(step => `[${step.nodeName}] → ${step.action}`).join('<br>↳ ') + '<br>↳ Reached NULL child (Key not present)'
+                    : 'Tree is empty (Root is NULL)';
+                searchPathTrace.innerHTML = `Start at Root:<br>↳ ${pathString}`;
+
+                highlightedNodeName = null;
+                renderTreeVisualizer();
+                showToast("Search Result", `"${query}" was not found in the BST.`, "warning");
+            }
+        });
+
+        btnClearSearch.addEventListener('click', () => {
+            searchContactNameInput.value = '';
+            searchResultBox.classList.remove('active');
+            highlightedNodeName = null;
+            renderTreeVisualizer();
+        });
+
+        // HIGHLIGHT NODE
+        window.handleHighlightNode = function(name) {
+            highlightedNodeName = name;
+            renderTreeVisualizer();
+            // Scroll tree visualizer to view
+            document.getElementById('treeContainer').scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+            showToast("Node Highlighted", `Focused on BST node: "${name}"`, "info");
+        };
+
+        // DELETE CONTACT
+        window.handleDeleteContact = function(name) {
+            if (confirm(`Are you sure you want to delete "${name}" from the Binary Search Tree?`)) {
+                const deleted = bst.delete(name);
+                if (deleted) {
+                    if (highlightedNodeName === name) {
+                        highlightedNodeName = null;
+                    }
+                    saveToLocalStorage();
+                    refreshUI();
+                    showToast("Deleted", `Contact "${name}" was successfully removed from the BST.`, "success");
+                } else {
+                    showToast("Error", `Could not delete "${name}". Node not found.`, "danger");
+                }
+            }
+        };
+
+        // EDIT CONTACT MODAL
+        window.openEditModal = function(name) {
+            const searchRes = bst.search(name);
+            if (!searchRes.found) {
+                showToast("Error", "Contact could not be located.", "danger");
+                return;
+            }
+
+            editOriginalName.value = searchRes.node.name;
+            editContactName.value = searchRes.node.name;
+            editContactPhone.value = searchRes.node.phone;
+            editContactEmail.value = searchRes.node.email;
+
+            editModalOverlay.classList.add('active');
+        };
+
+        function closeEditModal() {
+            editModalOverlay.classList.remove('active');
+            editContactForm.reset();
+        }
+
+        btnModalClose.addEventListener('click', closeEditModal);
+        btnModalCancel.addEventListener('click', closeEditModal);
+
+        editModalOverlay.addEventListener('click', (e) => {
+            if (e.target === editModalOverlay) {
+                closeEditModal();
+            }
+        });
+
+        editContactForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+            const origName = editOriginalName.value;
+            const newName = editContactName.value.trim();
+            const newPhone = editContactPhone.value.trim();
+            const newEmail = editContactEmail.value.trim();
+
+            if (!validateInput(newName, newPhone, newEmail)) return;
+
+            const res = bst.update(origName, newName, newPhone, newEmail);
+            if (res.success) {
+                saveToLocalStorage();
+                refreshUI();
+                closeEditModal();
+                showToast("Updated", res.message, "success");
+                highlightedNodeName = newName;
+                renderTreeVisualizer();
+            } else {
+                showToast("Update Failed", res.message, "danger");
+            }
+        });
+
+        // CLEAR ALL CONTACTS
+        btnClearAll.addEventListener('click', () => {
+            const total = bst.countNodes();
+            if (total === 0) {
+                showToast("Notice", "The tree is already empty.", "info");
+                return;
+            }
+
+            if (confirm(`Are you sure you want to clear all ${total} contacts from the Binary Search Tree? This cannot be undone.`)) {
+                bst.clear();
+                localStorage.removeItem(STORAGE_KEY);
+                highlightedNodeName = null;
+                refreshUI();
+                searchResultBox.classList.remove('active');
+                showToast("All Cleared", "Binary Search Tree has been emptied.", "warning");
+            }
+        });
+
+        // LOAD SAMPLE DATA
+        function loadSampleData(showNotification = true) {
+            sampleContacts.forEach(contact => {
+                bst.insert(contact.name, contact.phone, contact.email);
+            });
+            saveToLocalStorage();
+            refreshUI();
+            if (showNotification) {
+                showToast("Sample Data Loaded", "Pre-populated sample contacts into the BST.", "success");
+            }
+        }
+
+        btnLoadDemo.addEventListener('click', () => loadSampleData(true));
+        btnEmptyLoadSample.addEventListener('click', () => loadSampleData(true));
+
+        /**
+         * 10. SECURITY / ESCAPE HELPERS
+         */
+        function escapeHTML(str) {
+            if (!str) return '';
+            return str
+                .replace(/&/g, "&amp;")
+                .replace(/</g, "&lt;")
+                .replace(/>/g, "&gt;")
+                .replace(/"/g, "&quot;")
+                .replace(/'/g, "&#039;");
+        }
+
+        function escapeJsString(str) {
+            if (!str) return '';
+            return str.replace(/\\/g, '\\\\').replace(/'/g, "\\'");
+        }
+
+        // Initialize application on page load
+        window.addEventListener('DOMContentLoaded', () => {
+            loadFromLocalStorage();
+            refreshUI();
+        });
+
+    </script>
+</body>
+</html>
